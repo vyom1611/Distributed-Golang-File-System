@@ -14,4 +14,6 @@ func Test(t *testing.T) {
 	//Server
 	assert.Nil(t, transport.ListenAndAccept())
 
+	select {}
+
 }

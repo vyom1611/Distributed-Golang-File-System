@@ -6,6 +6,12 @@ import (
 	"sync"
 )
 
+// TCPPeer Remote node over TCP estabilished connection
+type TCPPeer struct {
+	conn     net.Conn
+	outbound bool
+}
+
 type TCPTransport struct {
 	ListenAddress string
 	listener      net.Listener
@@ -37,10 +43,19 @@ func (t *TCPTransport) startAcceptLoop() {
 		if err != nil {
 			fmt.Println("TCP listener accept error:", err)
 		}
+
 		go t.HandleConnection(conn)
 	}
 }
 
 func (t *TCPTransport) HandleConnection(conn net.Conn) {
-	fmt.Println("New incoming connection from:", conn)
+	peer := NewTCPPeer(conn, false)
+	fmt.Println("New incoming connection from:", peer)
+}
+
+func NewTCPPeer(conn net.Conn, outbound bool) *TCPPeer {
+	return &TCPPeer{
+		conn:     conn,
+		outbound: outbound,
+	}
 }
